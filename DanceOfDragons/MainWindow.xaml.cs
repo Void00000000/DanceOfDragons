@@ -274,40 +274,7 @@ namespace DanceOfDragons
 
         void DetermineAvailableWays(bool plus, int range, int cell_num, List<int> cell_nums)
         {
-            //Func<int, bool> check_func;
-            //if (plus)
-            //    check_func = j => cell_num + j < Cell.cells.Count;
-            //else
-            //    check_func = j => cell_num - j >= 0;
-
-            //int s = plus ? 1 : -1;
-            //int p = s; int i = p; int k = 0;
-            //while (check_func(i) && k < range)
-            //{
-            //    cell_nums.Add(Cell.cells[cell_num - 1 + i].Number);
-            //    i += p; k++;
-            //}
-            //p = s * 14; i = p; k = 0;
-            //while (check_func(i) && k < range)
-            //{
-            //    cell_nums.Add(Cell.cells[cell_num - 1 + i].Number);
-            //    i += p;
-            //    k++;
-            //}
-            //p = s * 15; i = p; k = 0;
-            //while (check_func(i) && k < range)
-            //{
-            //    cell_nums.Add(Cell.cells[cell_num - 1+ i].Number);
-            //    i += p;
-            //    k++;
-            //}
-            //p = s * 16; i = p; k = 0;
-            //while (check_func(i) && k < range)
-            //{
-            //    cell_nums.Add(Cell.cells[cell_num - 1 + i].Number);
-            //    i += p;
-            //    k++;
-            //}
+            
         }
 
         private void LeftClickOnCanvas(object sender, MouseButtonEventArgs e)
