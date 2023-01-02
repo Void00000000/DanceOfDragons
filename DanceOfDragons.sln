@@ -1,0 +1,25 @@
+﻿
+Microsoft Visual Studio Solution File, Format Version 12.00
+# Visual Studio Version 17
+VisualStudioVersion = 17.2.32630.192
+MinimumVisualStudioVersion = 10.0.40219.1
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "DanceOfDragons", "DanceOfDragons\DanceOfDragons.csproj", "{C50E9032-C934-484E-B1E6-A0CFF812F258}"
+EndProject
+Global
+	GlobalSection(SolutionConfigurationPlatforms) = preSolution
+		Debug|Any CPU = Debug|Any CPU
+		Release|Any CPU = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(ProjectConfigurationPlatforms) = postSolution
+		{C50E9032-C934-484E-B1E6-A0CFF812F258}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{C50E9032-C934-484E-B1E6-A0CFF812F258}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{C50E9032-C934-484E-B1E6-A0CFF812F258}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{C50E9032-C934-484E-B1E6-A0CFF812F258}.Release|Any CPU.Build.0 = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(SolutionProperties) = preSolution
+		HideSolutionNode = FALSE
+	EndGlobalSection
+	GlobalSection(ExtensibilityGlobals) = postSolution
+		SolutionGuid = {2B26B0FA-90F6-4188-863A-D77C15E38768}
+	EndGlobalSection
+EndGlobal

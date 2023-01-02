@@ -1,0 +1,15 @@
+﻿<Window x:Class="DanceOfDragons.MainWindow"
+        xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+        xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+        xmlns:local="clr-namespace:DanceOfDragons"
+        mc:Ignorable="d"
+        Title="Танец Драконов" Height="1080" Width="1920"
+        WindowState = "Maximized"
+        WindowStyle = "None">
+    <Canvas Name="MyCanvas" Focusable="True" KeyDown="OnKeyDown" MouseLeftButtonDown="LeftClickOnCanvas" MouseRightButtonDown="RightClickOnCanvas">
+        <Rectangle Name="Turn_bg" Height="47" Width="248" Fill="Wheat" Canvas.Left="1296" HorizontalAlignment="Left" VerticalAlignment="Center" Canvas.Top="4" />
+        <Label Name="Turn" FontSize="35" FontWeight="Bold" Foreground="Black" Content="Ход черных" Canvas.Left="1300" Canvas.Top="-5" HorizontalAlignment="Left" VerticalAlignment="Center" />
+    </Canvas>
+</Window>
