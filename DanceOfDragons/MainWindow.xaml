@@ -9,7 +9,6 @@
         WindowState = "Maximized"
         WindowStyle = "None">
     <Canvas Name="MyCanvas" Focusable="True" KeyDown="OnKeyDown" MouseLeftButtonDown="LeftClickOnCanvas" MouseRightButtonDown="RightClickOnCanvas">
-        <Rectangle Name="Turn_bg" Height="47" Width="248" Fill="Wheat" Canvas.Left="1296" HorizontalAlignment="Left" VerticalAlignment="Center" Canvas.Top="4" />
-        <Label Name="Turn" FontSize="35" FontWeight="Bold" Foreground="Black" Content="Ход черных" Canvas.Left="1300" Canvas.Top="-5" HorizontalAlignment="Left" VerticalAlignment="Center" />
+        <Rectangle Name="Turn_bg" Height="148" Width="146" Fill="Wheat" Canvas.Left="1387" HorizontalAlignment="Left" VerticalAlignment="Center" Canvas.Top="1" RenderTransformOrigin="-0.237,0.503" />
     </Canvas>
 </Window>
