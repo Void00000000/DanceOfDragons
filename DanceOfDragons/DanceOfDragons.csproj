@@ -111,5 +111,17 @@
   <ItemGroup>
     <Resource Include="images\teams\thegreens.png" />
   </ItemGroup>
+  <ItemGroup>
+    <Resource Include="images\warriors\crusader\crusader_b0.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <Resource Include="images\warriors\halberdier\halberdier_b0.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <Resource Include="images\warriors\crusader\crusader_g0.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <Resource Include="images\warriors\halberdier\halberdier_g0.png" />
+  </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
 </Project>

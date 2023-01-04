@@ -15,8 +15,6 @@ using System.Windows.Shapes;
 using System.Windows.Threading;
 
 // Завтра
-// TODO: Сделать спрайты зелёных войнов и расставить их
-// TODO: Сделать так, чтобы существо могло ходить только один раз
 // TODO: Сделать механику атаки
 // TODO: Сделать класс стрелков
 // TODO: Создать спрайты для стрелков и расставить их для обеих команд
@@ -34,7 +32,7 @@ namespace DanceOfDragons
         DispatcherTimer gameTimer = new DispatcherTimer();
         Team current_turn = Team.BLACK_TEAM; // Чей сейчас ход(черных или зеленых)
         bool is_creature_selected = false; // Выбрано ли существо
-        List<int> cell_nums = new List<int>(); // Ячейки, на которые выбранное существо моэет перейти
+        List<int> cell_nums = new List<int>(); // Ячейки, на которые выбранное существо может перейти
         int current_creature_index;
 
         public static string images_path = "pack://application:,,,/images/";
@@ -81,17 +79,29 @@ namespace DanceOfDragons
         // Создание существ
         void CreateCreatures()
         {
-            // Создание существ партии "Черных"
-            Creature.creatures.Add(new Warrior(Team.BLACK_TEAM, 300, 150, 2, Cell.cells[0][2], "crusader/crusader1.png"));
-            Creature.creatures.Add(new Warrior(Team.BLACK_TEAM, 300, 150, 2, Cell.cells[2][1], "crusader/crusader1.png"));
-            Creature.creatures.Add(new Warrior(Team.BLACK_TEAM, 300, 150, 2, Cell.cells[4][2], "crusader/crusader1.png"));
-            Creature.creatures.Add(new Warrior(Team.BLACK_TEAM, 300, 150, 2, Cell.cells[n_ver - 5][2], "crusader/crusader1.png"));
-            Creature.creatures.Add(new Warrior(Team.BLACK_TEAM, 300, 150, 2, Cell.cells[n_ver - 3][1], "crusader/crusader1.png"));
-            Creature.creatures.Add(new Warrior(Team.BLACK_TEAM, 300, 150, 2, Cell.cells[n_ver - 1][2], "crusader/crusader1.png"));
+            // Создание существ партии "Чёрные"
+            Creature.creatures.Add(new Warrior(Team.BLACK_TEAM, 300, 150, 2, Cell.cells[0][2], "crusader/crusader_b0.png"));
+            Creature.creatures.Add(new Warrior(Team.BLACK_TEAM, 300, 150, 2, Cell.cells[2][1], "crusader/crusader_b0.png"));
+            Creature.creatures.Add(new Warrior(Team.BLACK_TEAM, 300, 150, 2, Cell.cells[4][2], "crusader/crusader_b0.png"));
+            Creature.creatures.Add(new Warrior(Team.BLACK_TEAM, 300, 150, 2, Cell.cells[n_ver - 5][2], "crusader/crusader_b0.png"));
+            Creature.creatures.Add(new Warrior(Team.BLACK_TEAM, 300, 150, 2, Cell.cells[n_ver - 3][1], "crusader/crusader_b0.png"));
+            Creature.creatures.Add(new Warrior(Team.BLACK_TEAM, 300, 150, 2, Cell.cells[n_ver - 1][2], "crusader/crusader_b0.png"));
             for (int i = 0; i < n_ver; i++)
             {
-                Creature.creatures.Add(new Warrior(Team.BLACK_TEAM, 100, 50, 3, Cell.cells[i][3], "halberdier/halberdier1.png"));
-                Creature.creatures.Add(new Warrior(Team.BLACK_TEAM, 100, 50, 3, Cell.cells[i][4], "halberdier/halberdier1.png"));
+                Creature.creatures.Add(new Warrior(Team.BLACK_TEAM, 100, 50, 3, Cell.cells[i][3], "halberdier/halberdier_b0.png"));
+                Creature.creatures.Add(new Warrior(Team.BLACK_TEAM, 100, 50, 3, Cell.cells[i][4], "halberdier/halberdier_b0.png"));
+            }
+            // Создание существ партии "Зелёных"
+            Creature.creatures.Add(new Warrior(Team.GREEN_TEAM, 300, 150, 2, Cell.cells[0][n_hor - 1 - 2], "crusader/crusader_g0.png"));
+            Creature.creatures.Add(new Warrior(Team.GREEN_TEAM, 300, 150, 2, Cell.cells[2][n_hor - 1 - 1], "crusader/crusader_g0.png"));
+            Creature.creatures.Add(new Warrior(Team.GREEN_TEAM, 300, 150, 2, Cell.cells[4][n_hor - 1 - 2], "crusader/crusader_g0.png"));
+            Creature.creatures.Add(new Warrior(Team.GREEN_TEAM, 300, 150, 2, Cell.cells[n_ver - 5][n_hor - 1 - 2], "crusader/crusader_g0.png"));
+            Creature.creatures.Add(new Warrior(Team.GREEN_TEAM, 300, 150, 2, Cell.cells[n_ver - 3][n_hor - 1 - 1], "crusader/crusader_g0.png"));
+            Creature.creatures.Add(new Warrior(Team.GREEN_TEAM, 300, 150, 2, Cell.cells[n_ver - 1][n_hor - 1 - 2], "crusader/crusader_g0.png"));
+            for (int i = 0; i < n_ver; i++)
+            {
+                Creature.creatures.Add(new Warrior(Team.GREEN_TEAM, 100, 50, 3, Cell.cells[i][n_hor - 1 - 3], "halberdier/halberdier_g0.png"));
+                Creature.creatures.Add(new Warrior(Team.GREEN_TEAM, 100, 50, 3, Cell.cells[i][n_hor - 1 - 4], "halberdier/halberdier_g0.png"));
             }
         }
 
@@ -171,6 +181,10 @@ namespace DanceOfDragons
             {
                 current_turn = (current_turn == Team.BLACK_TEAM) ? Team.GREEN_TEAM : Team.BLACK_TEAM;
                 unhighlight_cells();
+                foreach (Creature creature in Creature.creatures)
+                {
+                    creature.Is_used = false;
+                }
             }
         }
 
@@ -227,13 +241,14 @@ namespace DanceOfDragons
                             Creature.creatures[current_creature_index].Move(
                                 Cell.cells[to_i(tag2.index)][to_j(tag2.index)]);
                             unhighlight_cells();
+                            is_creature_selected = false;
                         }
                     }
                 }
                 // Если клик был на существо
                 else
                 {
-                    if (Creature.creatures[tag2.index].team == current_turn)
+                    if (Creature.creatures[tag2.index].team == current_turn && !Creature.creatures[tag2.index].Is_used)
                     {
                         is_creature_selected = true;
                         current_creature_index = tag2.index;
@@ -245,6 +260,15 @@ namespace DanceOfDragons
                         {
                             Cell.cells[to_i(num)][to_j(num)].Rec.Fill = new SolidColorBrush(Color.FromArgb(125, 0, 0, 0));
                         }
+                    }
+                    else if (Creature.creatures[tag2.index].team != current_turn && is_creature_selected)
+                    {
+                        int creature_cell_num = Creature.creatures[tag2.index].cell.Number;
+                        foreach (int cell_num in cell_nums)
+                        {
+                            
+                        }
+                        Creature.creatures[current_creature_index].Attack(Creature.creatures[tag2.index]);
                     }
                 }
             }

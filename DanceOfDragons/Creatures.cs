@@ -24,27 +24,20 @@ namespace DanceOfDragons
         public Cell cell { get; protected set; } // Ячейка, на которой стоит существо
         protected string sprite; // Изображение существа
         protected int num; // Номер существа
+        public bool Is_used { get; set; } // Сходило ли существо
         public Rectangle Rec { get; protected set; }
         protected static int creature_num = 0; // Количество всего созданных существ
         static public List<Creature> creatures = new List<Creature>(); // Список всех созданных существ
 
         public bool Move(Cell to_cell)
         {
-            if (to_cell.Occupied)
-            {
-                MessageBox.Show("Ячейка занята, поэтому на неё нельзя переместить выбранное существо",
-                    "Нельзя переместить");
-                return false;
-            }
-            else
-            {
-                to_cell.Occupied = true;
-                cell.Occupied = false;
-                cell = to_cell;
-                Canvas.SetLeft(Rec, cell.PosX);
-                Canvas.SetTop(Rec, cell.PosY - 1.5 * Cell.Width);
-                return true;
-            }
+            to_cell.Occupied = true;
+            cell.Occupied = false;
+            cell = to_cell;
+            Canvas.SetLeft(Rec, cell.PosX);
+            Canvas.SetTop(Rec, cell.PosY - 1.5 * Cell.Width);
+            Is_used = true;
+            return true;
         }
         abstract public void Attack(Creature creature);
         abstract public void ShowInfo();
@@ -65,6 +58,7 @@ namespace DanceOfDragons
             num = creature_num;
             creature_num++;
             cell.Occupied = true;
+
 
             ImageBrush warriorSprite = new ImageBrush();
             warriorSprite.ImageSource = new BitmapImage(new Uri(MainWindow.images_path + "warriors/" + sprite));
@@ -89,7 +83,7 @@ namespace DanceOfDragons
         }
         public override void Attack(Creature creature)
         {
-            throw new NotImplementedException();
+            MessageBox.Show("Атака", "Произошла атака");
         }
     }
 }
