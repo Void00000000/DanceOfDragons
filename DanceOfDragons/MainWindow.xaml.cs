@@ -15,9 +15,10 @@ using System.Windows.Shapes;
 using System.Windows.Threading;
 
 // Завтра
-// TODO: Сделать механику атаки
 // TODO: Сделать класс стрелков
 // TODO: Создать спрайты для стрелков и расставить их для обеих команд
+// TODO: Сделать класс драконов
+// TODO: Создать спрайты для драконов и расставить их для обеих команд
 
 // Потом
 // TODO: Избавиться от мемоизации
@@ -32,10 +33,14 @@ namespace DanceOfDragons
         DispatcherTimer gameTimer = new DispatcherTimer();
         Team current_turn = Team.BLACK_TEAM; // Чей сейчас ход(черных или зеленых)
         bool is_creature_selected = false; // Выбрано ли существо
+        bool is_attack = false; // Атакует ли сейчас существо
         List<int> cell_nums = new List<int>(); // Ячейки, на которые выбранное существо может перейти
+        List<int> cell_nums_attack = new List<int>(); // Ячейки, на которые выбранное существо может перейти и атаковать из них
         int current_creature_index;
+        int current_creature_to_attack_index;
 
         public static string images_path = "pack://application:,,,/images/";
+        public static List<Rectangle> removeRects = new List<Rectangle>(); // Уничтоженные существа
 
         ImageBrush blackImage = new ImageBrush();
         ImageBrush greenImage = new ImageBrush();
@@ -103,6 +108,9 @@ namespace DanceOfDragons
                 Creature.creatures.Add(new Warrior(Team.GREEN_TEAM, 100, 50, 3, Cell.cells[i][n_hor - 1 - 3], "halberdier/halberdier_g0.png"));
                 Creature.creatures.Add(new Warrior(Team.GREEN_TEAM, 100, 50, 3, Cell.cells[i][n_hor - 1 - 4], "halberdier/halberdier_g0.png"));
             }
+
+
+            Creature.creatures.Add(new Warrior(Team.BLACK_TEAM, 300, 150, 2, Cell.cells[5][5], "crusader/crusader_b0.png"));
         }
 
 
@@ -112,7 +120,12 @@ namespace DanceOfDragons
             {
                 Cell.cells[to_i(num)][to_j(num)].Rec.Fill = new SolidColorBrush(Color.FromArgb(0, 0, 0, 0));
             }
+            foreach (int num in cell_nums_attack)
+            {
+                Cell.cells[to_i(num)][to_j(num)].Rec.Fill = new SolidColorBrush(Color.FromArgb(0, 0, 0, 0));
+            }
             cell_nums.Clear();
+            cell_nums_attack.Clear();
         }
 
         public MainWindow()
@@ -143,7 +156,8 @@ namespace DanceOfDragons
             // Рисование
             foreach (Creature creature in Creature.creatures)
             {
-                MyCanvas.Children.Add(creature.Rec);
+                if (creature != null)
+                    MyCanvas.Children.Add(creature.Rec);
             }
 
             gameTimer.Interval = TimeSpan.FromMilliseconds(20);
@@ -152,6 +166,17 @@ namespace DanceOfDragons
 
         }
 
+
+        void RemoveRect()
+        {
+            foreach (Rectangle rectangle in removeRects)
+            {
+                MyCanvas.Children.Remove(rectangle);
+            }
+            removeRects.Clear();
+        }
+
+
         private void gameLoop(object sender, EventArgs e)
         {
             Turn_bg.Fill = (current_turn == Team.BLACK_TEAM) ? blackImage : greenImage;
@@ -159,13 +184,15 @@ namespace DanceOfDragons
             // Удаление
             foreach (Creature creature in Creature.creatures)
             {
-                MyCanvas.Children.Remove(creature.Rec);
+                if (creature != null)
+                    MyCanvas.Children.Remove(creature.Rec);
             }
 
             // Рисование
             foreach (Creature creature in Creature.creatures)
             {
-                MyCanvas.Children.Add(creature.Rec);
+                if (creature != null)
+                    MyCanvas.Children.Add(creature.Rec);
             }
         }
 
@@ -183,8 +210,16 @@ namespace DanceOfDragons
                 unhighlight_cells();
                 foreach (Creature creature in Creature.creatures)
                 {
-                    creature.Is_used = false;
+                    if (creature != null)
+                        creature.Is_used = false;
                 }
+            }
+            // Отменить выбор существа
+            if (e.Key == Key.Q)
+            {
+                unhighlight_cells();
+                is_creature_selected = false;
+                is_attack = false;
             }
         }
 
@@ -232,7 +267,7 @@ namespace DanceOfDragons
             {
                 Rectangle rect = (Rectangle)e.OriginalSource;
                 Tag2 tag2 = (Tag2)rect.Tag;
-                if (tag2.IsCell)
+                if (tag2.IsCell && !is_attack)
                 {
                     if (is_creature_selected)
                     {
@@ -245,10 +280,20 @@ namespace DanceOfDragons
                         }
                     }
                 }
+                else if (tag2.IsCell && is_attack && cell_nums_attack.Contains(tag2.index) && is_creature_selected)
+                {
+                    Creature.creatures[current_creature_index].Move(
+                                Cell.cells[to_i(tag2.index)][to_j(tag2.index)]);
+                    Creature.creatures[current_creature_index].Attack(Creature.creatures[current_creature_to_attack_index]);
+                    unhighlight_cells();
+                    is_creature_selected = false;
+                    is_attack = false;
+                    RemoveRect();
+                }
                 // Если клик был на существо
                 else
                 {
-                    if (Creature.creatures[tag2.index].team == current_turn && !Creature.creatures[tag2.index].Is_used)
+                    if (!is_attack && Creature.creatures[tag2.index].team == current_turn && !Creature.creatures[tag2.index].Is_used)
                     {
                         is_creature_selected = true;
                         current_creature_index = tag2.index;
@@ -261,14 +306,31 @@ namespace DanceOfDragons
                             Cell.cells[to_i(num)][to_j(num)].Rec.Fill = new SolidColorBrush(Color.FromArgb(125, 0, 0, 0));
                         }
                     }
-                    else if (Creature.creatures[tag2.index].team != current_turn && is_creature_selected)
+                    else if (!is_attack && Creature.creatures[tag2.index].team != current_turn && is_creature_selected && !is_attack)
                     {
-                        int creature_cell_num = Creature.creatures[tag2.index].cell.Number;
+                        current_creature_to_attack_index = tag2.index;
+                        int i = to_i(Creature.creatures[tag2.index].cell.Number);
+                        int j = to_j(Creature.creatures[tag2.index].cell.Number);
                         foreach (int cell_num in cell_nums)
                         {
-                            
+                            for (int ik = -1; ik < 2; ik++)
+                                for (int jk = -1; jk < 2; jk++)
+                                    try
+                                    {
+                                        if (Cell.cells[i + ik][j + jk].Number == cell_num) {
+                                            cell_nums_attack.Add(cell_num);
+                                        }
+                                    }
+                                    catch { continue; }
                         }
-                        Creature.creatures[current_creature_index].Attack(Creature.creatures[tag2.index]);
+                        foreach (int cell_num_attack in cell_nums_attack)
+                        {
+                            Cell.cells[to_i(cell_num_attack)][to_j(cell_num_attack)].Rec.Fill = new SolidColorBrush(Color.FromArgb(125, 255, 0, 0));
+                        }
+                        if (cell_nums_attack.Count != 0)
+                            is_attack = true;
+                        else
+                            is_attack = false;
                     }
                 }
             }

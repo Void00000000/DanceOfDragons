@@ -18,12 +18,12 @@ namespace DanceOfDragons
     abstract class Creature
     {
         public Team team { get; protected set; }
-        protected int hp;
-        protected int dmg;
+        public int Hp { get; set; }
+        public int Dmg { get; protected set; }
         public int Range { get; protected set; } // Дальность передвижения(в ячейках)
         public Cell cell { get; protected set; } // Ячейка, на которой стоит существо
         protected string sprite; // Изображение существа
-        protected int num; // Номер существа
+        public int Num { get; protected set; } // Номер существа
         public bool Is_used { get; set; } // Сходило ли существо
         public Rectangle Rec { get; protected set; }
         protected static int creature_num = 0; // Количество всего созданных существ
@@ -50,12 +50,12 @@ namespace DanceOfDragons
         public Warrior(Team team, int hp, int dmg, int range, Cell cell, string sprite)
         {
             this.team = team;
-            this.hp = hp;
-            this.dmg = dmg;
+            Hp = hp;
+            Dmg = dmg;
             Range = range;
             this.cell = cell;
             this.sprite = sprite;
-            num = creature_num;
+            Num = creature_num;
             creature_num++;
             cell.Occupied = true;
 
@@ -64,7 +64,7 @@ namespace DanceOfDragons
             warriorSprite.ImageSource = new BitmapImage(new Uri(MainWindow.images_path + "warriors/" + sprite));
             Rec = new Rectangle
             {
-                Tag = new Tag2(false, num),
+                Tag = new Tag2(false, Num),
                 Height = 3 * Cell.Height,
                 Width = 0.9 * Cell.Width,
                 Fill = warriorSprite
@@ -77,13 +77,30 @@ namespace DanceOfDragons
         {
             string b_g = (team == Team.BLACK_TEAM) ? "Черные" : "Зеленые";
             MessageBox.Show("Тип существа: Воин" + Environment.NewLine + "Фракция: " + b_g + Environment.NewLine +
-                "Здоровье: " + hp + Environment.NewLine + "Урон: " + dmg + Environment.NewLine
+                "Здоровье: " + Hp + Environment.NewLine + "Урон: " + Dmg + Environment.NewLine
                 + "Дальность передвижения: " + Range + Environment.NewLine +
-                "Номер ячейки: " + cell.Number, "Информация о воине № " + num);
+                "Номер ячейки: " + cell.Number, "Информация о воине № " + Num);
         }
         public override void Attack(Creature creature)
         {
-            MessageBox.Show("Атака", "Произошла атака");
+            creature.Hp -= Dmg;
+            if (creature.Hp <= 0)
+            {
+                MainWindow.removeRects.Add(creatures[creature.Num].Rec);
+                creature.cell.Occupied = false;
+                creatures[creature.Num] = null;
+            }
+            // Ответная атака от противника
+            else
+            {
+                Hp -= creature.Dmg;
+                if (Hp <= 0)
+                {
+                    MainWindow.removeRects.Add(Rec);
+                    cell.Occupied = false;
+                    creatures[Num] = null;
+                }
+            }
         }
     }
 }
