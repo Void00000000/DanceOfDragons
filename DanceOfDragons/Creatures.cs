@@ -25,17 +25,18 @@ namespace DanceOfDragons
         protected string sprite; // Изображение существа
         public int Num { get; protected set; } // Номер существа
         public bool Is_used { get; set; } // Сходило ли существо
-        public Rectangle Rec { get; protected set; }
+        public Rectangle Rec { get; set; }
         protected static int creature_num = 0; // Количество всего созданных существ
         static public List<Creature> creatures = new List<Creature>(); // Список всех созданных существ
+        protected float offset;
 
         public bool Move(Cell to_cell)
         {
-            to_cell.Occupied = true;
             cell.Occupied = false;
+            to_cell.Occupied = true;
             cell = to_cell;
             Canvas.SetLeft(Rec, cell.PosX);
-            Canvas.SetTop(Rec, cell.PosY - 1.5 * Cell.Width);
+            Canvas.SetTop(Rec, cell.PosY - offset * Cell.Width);
             Is_used = true;
             return true;
         }
@@ -58,7 +59,7 @@ namespace DanceOfDragons
             Num = creature_num;
             creature_num++;
             cell.Occupied = true;
-
+            offset = 1.5f;
 
             ImageBrush warriorSprite = new ImageBrush();
             warriorSprite.ImageSource = new BitmapImage(new Uri(MainWindow.images_path + "warriors/" + sprite));
@@ -70,7 +71,7 @@ namespace DanceOfDragons
                 Fill = warriorSprite
             };
             Canvas.SetLeft(Rec, cell.PosX);
-            Canvas.SetTop(Rec, cell.PosY - 1.5 * Cell.Width);
+            Canvas.SetTop(Rec, cell.PosY - offset * Cell.Width);
         }
 
         public override void ShowInfo()
@@ -100,6 +101,55 @@ namespace DanceOfDragons
                     cell.Occupied = false;
                     creatures[Num] = null;
                 }
+            }
+        }
+    }
+
+    // Стрелки
+    class RangedWarrior : Creature
+    {
+        public RangedWarrior(Team team, int hp, int dmg, int range, Cell cell, string sprite)
+        {
+            this.team = team;
+            Hp = hp;
+            Dmg = dmg;
+            Range = range;
+            this.cell = cell;
+            this.sprite = sprite;
+            Num = creature_num;
+            creature_num++;
+            cell.Occupied = true;
+            offset = 1f;
+
+            ImageBrush warriorSprite = new ImageBrush();
+            warriorSprite.ImageSource = new BitmapImage(new Uri(MainWindow.images_path + "ranged_warriors/" + sprite));
+            Rec = new Rectangle
+            {
+                Tag = new Tag2(false, Num),
+                Height = 2.25 * Cell.Height,
+                Width = 0.9 * Cell.Width,
+                Fill = warriorSprite
+            };
+            Canvas.SetLeft(Rec, cell.PosX);
+            Canvas.SetTop(Rec, cell.PosY - offset * Cell.Width);
+        }
+
+        public override void ShowInfo()
+        {
+            string b_g = (team == Team.BLACK_TEAM) ? "Черные" : "Зеленые";
+            MessageBox.Show("Тип существа: Стрелок" + Environment.NewLine + "Фракция: " + b_g + Environment.NewLine +
+                "Здоровье: " + Hp + Environment.NewLine + "Урон: " + Dmg + Environment.NewLine
+                + "Дальность передвижения: " + Range + Environment.NewLine +
+                "Номер ячейки: " + cell.Number, "Информация о стрелке № " + Num);
+        }
+        public override void Attack(Creature creature)
+        {
+            creature.Hp -= Dmg;
+            if (creature.Hp <= 0)
+            {
+                MainWindow.removeRects.Add(creatures[creature.Num].Rec);
+                creature.cell.Occupied = false;
+                creatures[creature.Num] = null;
             }
         }
     }

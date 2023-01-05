@@ -14,14 +14,9 @@ using System.Windows.Navigation;
 using System.Windows.Shapes;
 using System.Windows.Threading;
 
-// Завтра
-// TODO: Сделать класс стрелков
-// TODO: Создать спрайты для стрелков и расставить их для обеих команд
-// TODO: Сделать класс драконов
-// TODO: Создать спрайты для драконов и расставить их для обеих команд
 
 // Потом
-// TODO: Избавиться от мемоизации
+// TODO: Мемоизации
 
 namespace DanceOfDragons
 {
@@ -81,38 +76,64 @@ namespace DanceOfDragons
             }
         }
 
-        // Создание существ
+        //Создание существ
         void CreateCreatures()
         {
-            // Создание существ партии "Чёрные"
-            Creature.creatures.Add(new Warrior(Team.BLACK_TEAM, 300, 150, 2, Cell.cells[0][2], "crusader/crusader_b0.png"));
-            Creature.creatures.Add(new Warrior(Team.BLACK_TEAM, 300, 150, 2, Cell.cells[2][1], "crusader/crusader_b0.png"));
-            Creature.creatures.Add(new Warrior(Team.BLACK_TEAM, 300, 150, 2, Cell.cells[4][2], "crusader/crusader_b0.png"));
-            Creature.creatures.Add(new Warrior(Team.BLACK_TEAM, 300, 150, 2, Cell.cells[n_ver - 5][2], "crusader/crusader_b0.png"));
-            Creature.creatures.Add(new Warrior(Team.BLACK_TEAM, 300, 150, 2, Cell.cells[n_ver - 3][1], "crusader/crusader_b0.png"));
-            Creature.creatures.Add(new Warrior(Team.BLACK_TEAM, 300, 150, 2, Cell.cells[n_ver - 1][2], "crusader/crusader_b0.png"));
-            for (int i = 0; i < n_ver; i++)
-            {
-                Creature.creatures.Add(new Warrior(Team.BLACK_TEAM, 100, 50, 3, Cell.cells[i][3], "halberdier/halberdier_b0.png"));
-                Creature.creatures.Add(new Warrior(Team.BLACK_TEAM, 100, 50, 3, Cell.cells[i][4], "halberdier/halberdier_b0.png"));
-            }
-            // Создание существ партии "Зелёных"
-            Creature.creatures.Add(new Warrior(Team.GREEN_TEAM, 300, 150, 2, Cell.cells[0][n_hor - 1 - 2], "crusader/crusader_g0.png"));
-            Creature.creatures.Add(new Warrior(Team.GREEN_TEAM, 300, 150, 2, Cell.cells[2][n_hor - 1 - 1], "crusader/crusader_g0.png"));
-            Creature.creatures.Add(new Warrior(Team.GREEN_TEAM, 300, 150, 2, Cell.cells[4][n_hor - 1 - 2], "crusader/crusader_g0.png"));
-            Creature.creatures.Add(new Warrior(Team.GREEN_TEAM, 300, 150, 2, Cell.cells[n_ver - 5][n_hor - 1 - 2], "crusader/crusader_g0.png"));
-            Creature.creatures.Add(new Warrior(Team.GREEN_TEAM, 300, 150, 2, Cell.cells[n_ver - 3][n_hor - 1 - 1], "crusader/crusader_g0.png"));
-            Creature.creatures.Add(new Warrior(Team.GREEN_TEAM, 300, 150, 2, Cell.cells[n_ver - 1][n_hor - 1 - 2], "crusader/crusader_g0.png"));
-            for (int i = 0; i < n_ver; i++)
-            {
-                Creature.creatures.Add(new Warrior(Team.GREEN_TEAM, 100, 50, 3, Cell.cells[i][n_hor - 1 - 3], "halberdier/halberdier_g0.png"));
-                Creature.creatures.Add(new Warrior(Team.GREEN_TEAM, 100, 50, 3, Cell.cells[i][n_hor - 1 - 4], "halberdier/halberdier_g0.png"));
-            }
+            //// Создание существ партии "Чёрные"
+            //Creature.creatures.Add(new Warrior(Team.BLACK_TEAM, 300, 150, 2, Cell.cells[0][2], "crusader/crusader_b0.png"));
+            //Creature.creatures.Add(new Warrior(Team.BLACK_TEAM, 300, 150, 2, Cell.cells[2][1], "crusader/crusader_b0.png"));
+            //Creature.creatures.Add(new Warrior(Team.BLACK_TEAM, 300, 150, 2, Cell.cells[4][2], "crusader/crusader_b0.png"));
+            //Creature.creatures.Add(new Warrior(Team.BLACK_TEAM, 300, 150, 2, Cell.cells[n_ver - 5][2], "crusader/crusader_b0.png"));
+            //Creature.creatures.Add(new Warrior(Team.BLACK_TEAM, 300, 150, 2, Cell.cells[n_ver - 3][1], "crusader/crusader_b0.png"));
+            //Creature.creatures.Add(new Warrior(Team.BLACK_TEAM, 300, 150, 2, Cell.cells[n_ver - 1][2], "crusader/crusader_b0.png"));
+            //for (int i = 0; i < n_ver; i++)
+            //{
+            //    Creature.creatures.Add(new Warrior(Team.BLACK_TEAM, 100, 50, 3, Cell.cells[i][3], "halberdier/halberdier_b0.png"));
+            //    //Creature.creatures.Add(new Warrior(Team.BLACK_TEAM, 100, 50, 3, Cell.cells[i][4], "halberdier/halberdier_b0.png"));
+            //}
+            //// Создание существ партии "Зелёных"
+            //Creature.creatures.Add(new Warrior(Team.GREEN_TEAM, 300, 150, 2, Cell.cells[0][n_hor - 1 - 2], "crusader/crusader_g0.png"));
+            //Creature.creatures.Add(new Warrior(Team.GREEN_TEAM, 300, 150, 2, Cell.cells[2][n_hor - 1 - 1], "crusader/crusader_g0.png"));
+            //Creature.creatures.Add(new Warrior(Team.GREEN_TEAM, 300, 150, 2, Cell.cells[4][n_hor - 1 - 2], "crusader/crusader_g0.png"));
+            //Creature.creatures.Add(new Warrior(Team.GREEN_TEAM, 300, 150, 2, Cell.cells[n_ver - 5][n_hor - 1 - 2], "crusader/crusader_g0.png"));
+            //Creature.creatures.Add(new Warrior(Team.GREEN_TEAM, 300, 150, 2, Cell.cells[n_ver - 3][n_hor - 1 - 1], "crusader/crusader_g0.png"));
+            //Creature.creatures.Add(new Warrior(Team.GREEN_TEAM, 300, 150, 2, Cell.cells[n_ver - 1][n_hor - 1 - 2], "crusader/crusader_g0.png"));
+            //for (int i = 0; i < n_ver; i++)
+            //{
+            //    Creature.creatures.Add(new Warrior(Team.GREEN_TEAM, 100, 50, 3, Cell.cells[i][n_hor - 1 - 3], "halberdier/halberdier_g0.png"));
+            //    //Creature.creatures.Add(new Warrior(Team.GREEN_TEAM, 100, 50, 3, Cell.cells[i][n_hor - 1 - 4], "halberdier/halberdier_g0.png"));
+            //}
 
 
+            //Creature.creatures.Add(new Warrior(Team.BLACK_TEAM, 300, 150, 2, Cell.cells[5][5], "crusader/crusader_b0.png"));
             Creature.creatures.Add(new Warrior(Team.BLACK_TEAM, 300, 150, 2, Cell.cells[5][5], "crusader/crusader_b0.png"));
-        }
+            Creature.creatures.Add(new Warrior(Team.GREEN_TEAM, 300, 150, 2, Cell.cells[5][n_hor - 5], "crusader/crusader_g0.png"));
+            Creature.creatures.Add(new Warrior(Team.BLACK_TEAM, 100, 50, 3, Cell.cells[1][5], "halberdier/halberdier_b0.png"));
+            Creature.creatures.Add(new Warrior(Team.BLACK_TEAM, 100, 50, 3, Cell.cells[2][5], "halberdier/halberdier_b0.png"));
+            Creature.creatures.Add(new Warrior(Team.BLACK_TEAM, 100, 50, 3, Cell.cells[3][5], "halberdier/halberdier_b0.png"));
+            Creature.creatures.Add(new Warrior(Team.GREEN_TEAM, 100, 50, 3, Cell.cells[1][n_hor - 5], "halberdier/halberdier_g0.png"));
+            Creature.creatures.Add(new Warrior(Team.GREEN_TEAM, 100, 50, 3, Cell.cells[2][n_hor - 5], "halberdier/halberdier_g0.png"));
+            Creature.creatures.Add(new Warrior(Team.GREEN_TEAM, 100, 50, 3, Cell.cells[3][n_hor - 5], "halberdier/halberdier_g0.png"));
 
+            Creature.creatures.Add(new RangedWarrior(Team.BLACK_TEAM, 25, 90, 1, Cell.cells[0][0], "marksman/Marksman.png"));
+
+            void create_ballista(Team team, Cell cell)
+            {
+                char b_g = (team == Team.BLACK_TEAM) ? 'b' : 'g';
+                RangedWarrior black_ballista = new RangedWarrior(team, 900, 300, 0, cell, $"ballista/ballista_{b_g}0.png");
+                black_ballista.Rec.Width = 3 * Cell.Width;
+                black_ballista.Rec.Height = 1.5 * Cell.Height;
+                Canvas.SetLeft(black_ballista.Rec, black_ballista.cell.PosX - 0.7 * Cell.Width);
+                Canvas.SetTop(black_ballista.Rec, black_ballista.cell.PosY - 0.7 * Cell.Height);
+                Creature.creatures.Add(black_ballista);
+                if (team == Team.BLACK_TEAM)
+                    Cell.cells[to_i(cell.Number)][to_j(cell.Number) + 1].Occupied = true;
+                else
+                    Cell.cells[to_i(cell.Number)][to_j(cell.Number) - 1].Occupied = true;
+            }
+
+            create_ballista(Team.BLACK_TEAM, Cell.cells[5][0]);
+        }
 
         void unhighlight_cells()
         {
@@ -293,6 +314,7 @@ namespace DanceOfDragons
                 // Если клик был на существо
                 else
                 {
+                    // Клик на своё существо
                     if (!is_attack && Creature.creatures[tag2.index].team == current_turn && !Creature.creatures[tag2.index].Is_used)
                     {
                         is_creature_selected = true;
@@ -306,8 +328,18 @@ namespace DanceOfDragons
                             Cell.cells[to_i(num)][to_j(num)].Rec.Fill = new SolidColorBrush(Color.FromArgb(125, 0, 0, 0));
                         }
                     }
+                    // Клик на вражеское существо
                     else if (!is_attack && Creature.creatures[tag2.index].team != current_turn && is_creature_selected && !is_attack)
                     {
+                        if (Creature.creatures[current_creature_index] is RangedWarrior)
+                        {
+                            Creature.creatures[current_creature_index].Attack(Creature.creatures[tag2.index]);
+                            is_creature_selected = false;
+                            Creature.creatures[current_creature_index].Is_used = true;
+                            unhighlight_cells();
+                            RemoveRect();
+                            return;
+                        }
                         current_creature_to_attack_index = tag2.index;
                         int i = to_i(Creature.creatures[tag2.index].cell.Number);
                         int j = to_j(Creature.creatures[tag2.index].cell.Number);

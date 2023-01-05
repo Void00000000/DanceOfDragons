@@ -123,5 +123,11 @@
   <ItemGroup>
     <Resource Include="images\warriors\halberdier\halberdier_g0.png" />
   </ItemGroup>
+  <ItemGroup>
+    <Resource Include="images\ranged_warriors\marksman\Marksman.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <Resource Include="images\ranged_warriors\ballista\ballista_b0.png" />
+  </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
 </Project>
