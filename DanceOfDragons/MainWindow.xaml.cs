@@ -15,8 +15,11 @@ using System.Windows.Shapes;
 using System.Windows.Threading;
 
 
-// Потом
-// TODO: Мемоизации
+// Сейчас
+// TODO: Мемоизация
+// TODO: Стартово окно
+// TODO: Выбор карт
+// TODO: Обработка препятствий
 
 namespace DanceOfDragons
 {
@@ -33,117 +36,22 @@ namespace DanceOfDragons
         List<int> cell_nums_attack = new List<int>(); // Ячейки, на которые выбранное существо может перейти и атаковать из них
         int current_creature_index;
         int current_creature_to_attack_index;
-
-        public static string images_path = "pack://application:,,,/images/";
+        string images_path = "pack://application:,,,/images/";
         public static List<Rectangle> removeRects = new List<Rectangle>(); // Уничтоженные существа
 
         ImageBrush blackImage = new ImageBrush();
         ImageBrush greenImage = new ImageBrush();
 
-        int beg_left = 0; // Откуда по оси X начинается рисование ячеек
-        int beg_top = 152; // Откуда по оси Y начинается рисование ячеек
-
-        // Количество ячеек по вертикали
-        const int n_ver = 11;
-        // Количество ячеек по горизонтали
-        const int n_hor = 15;
-        int to_i(int cell_num)
-        {
-            return (cell_num - 1)/ n_hor;
-        }
-        int to_j(int cell_num)
-        {
-            return (cell_num - 1)% n_hor;
-        }
-        int to_cell_num(int i, int j)
-        {
-            return j + i * n_hor + 1;
-        }
-
-        // Создание ячеек
-        void CreateCells()
-        {
-            Cell.cells = new Cell[n_ver][];
-            // Заполнение массива ячеек
-            for (int i = 0; i < n_ver; i++)
-            {
-                Cell.cells[i] = new Cell[n_hor];
-                for (int j = 0; j < n_hor; j++)
-                {
-                    Cell.cells[i][j] = new Cell(beg_left + j * Cell.Width, beg_top + i * Cell.Height,
-                        to_cell_num(i, j), false);
-                }
-            }
-        }
-
-        //Создание существ
-        void CreateCreatures()
-        {
-            //// Создание существ партии "Чёрные"
-            //Creature.creatures.Add(new Warrior(Team.BLACK_TEAM, 300, 150, 2, Cell.cells[0][2], "crusader/crusader_b0.png"));
-            //Creature.creatures.Add(new Warrior(Team.BLACK_TEAM, 300, 150, 2, Cell.cells[2][1], "crusader/crusader_b0.png"));
-            //Creature.creatures.Add(new Warrior(Team.BLACK_TEAM, 300, 150, 2, Cell.cells[4][2], "crusader/crusader_b0.png"));
-            //Creature.creatures.Add(new Warrior(Team.BLACK_TEAM, 300, 150, 2, Cell.cells[n_ver - 5][2], "crusader/crusader_b0.png"));
-            //Creature.creatures.Add(new Warrior(Team.BLACK_TEAM, 300, 150, 2, Cell.cells[n_ver - 3][1], "crusader/crusader_b0.png"));
-            //Creature.creatures.Add(new Warrior(Team.BLACK_TEAM, 300, 150, 2, Cell.cells[n_ver - 1][2], "crusader/crusader_b0.png"));
-            //for (int i = 0; i < n_ver; i++)
-            //{
-            //    Creature.creatures.Add(new Warrior(Team.BLACK_TEAM, 100, 50, 3, Cell.cells[i][3], "halberdier/halberdier_b0.png"));
-            //    //Creature.creatures.Add(new Warrior(Team.BLACK_TEAM, 100, 50, 3, Cell.cells[i][4], "halberdier/halberdier_b0.png"));
-            //}
-            //// Создание существ партии "Зелёных"
-            //Creature.creatures.Add(new Warrior(Team.GREEN_TEAM, 300, 150, 2, Cell.cells[0][n_hor - 1 - 2], "crusader/crusader_g0.png"));
-            //Creature.creatures.Add(new Warrior(Team.GREEN_TEAM, 300, 150, 2, Cell.cells[2][n_hor - 1 - 1], "crusader/crusader_g0.png"));
-            //Creature.creatures.Add(new Warrior(Team.GREEN_TEAM, 300, 150, 2, Cell.cells[4][n_hor - 1 - 2], "crusader/crusader_g0.png"));
-            //Creature.creatures.Add(new Warrior(Team.GREEN_TEAM, 300, 150, 2, Cell.cells[n_ver - 5][n_hor - 1 - 2], "crusader/crusader_g0.png"));
-            //Creature.creatures.Add(new Warrior(Team.GREEN_TEAM, 300, 150, 2, Cell.cells[n_ver - 3][n_hor - 1 - 1], "crusader/crusader_g0.png"));
-            //Creature.creatures.Add(new Warrior(Team.GREEN_TEAM, 300, 150, 2, Cell.cells[n_ver - 1][n_hor - 1 - 2], "crusader/crusader_g0.png"));
-            //for (int i = 0; i < n_ver; i++)
-            //{
-            //    Creature.creatures.Add(new Warrior(Team.GREEN_TEAM, 100, 50, 3, Cell.cells[i][n_hor - 1 - 3], "halberdier/halberdier_g0.png"));
-            //    //Creature.creatures.Add(new Warrior(Team.GREEN_TEAM, 100, 50, 3, Cell.cells[i][n_hor - 1 - 4], "halberdier/halberdier_g0.png"));
-            //}
-
-
-            //Creature.creatures.Add(new Warrior(Team.BLACK_TEAM, 300, 150, 2, Cell.cells[5][5], "crusader/crusader_b0.png"));
-            Creature.creatures.Add(new Warrior(Team.BLACK_TEAM, 300, 150, 2, Cell.cells[5][5], "crusader/crusader_b0.png"));
-            Creature.creatures.Add(new Warrior(Team.GREEN_TEAM, 300, 150, 2, Cell.cells[5][n_hor - 5], "crusader/crusader_g0.png"));
-            Creature.creatures.Add(new Warrior(Team.BLACK_TEAM, 100, 50, 3, Cell.cells[1][5], "halberdier/halberdier_b0.png"));
-            Creature.creatures.Add(new Warrior(Team.BLACK_TEAM, 100, 50, 3, Cell.cells[2][5], "halberdier/halberdier_b0.png"));
-            Creature.creatures.Add(new Warrior(Team.BLACK_TEAM, 100, 50, 3, Cell.cells[3][5], "halberdier/halberdier_b0.png"));
-            Creature.creatures.Add(new Warrior(Team.GREEN_TEAM, 100, 50, 3, Cell.cells[1][n_hor - 5], "halberdier/halberdier_g0.png"));
-            Creature.creatures.Add(new Warrior(Team.GREEN_TEAM, 100, 50, 3, Cell.cells[2][n_hor - 5], "halberdier/halberdier_g0.png"));
-            Creature.creatures.Add(new Warrior(Team.GREEN_TEAM, 100, 50, 3, Cell.cells[3][n_hor - 5], "halberdier/halberdier_g0.png"));
-
-            Creature.creatures.Add(new RangedWarrior(Team.BLACK_TEAM, 25, 90, 1, Cell.cells[0][0], "marksman/Marksman.png"));
-
-            void create_ballista(Team team, Cell cell)
-            {
-                char b_g = (team == Team.BLACK_TEAM) ? 'b' : 'g';
-                RangedWarrior black_ballista = new RangedWarrior(team, 900, 300, 0, cell, $"ballista/ballista_{b_g}0.png");
-                black_ballista.Rec.Width = 3 * Cell.Width;
-                black_ballista.Rec.Height = 1.5 * Cell.Height;
-                Canvas.SetLeft(black_ballista.Rec, black_ballista.cell.PosX - 0.7 * Cell.Width);
-                Canvas.SetTop(black_ballista.Rec, black_ballista.cell.PosY - 0.7 * Cell.Height);
-                Creature.creatures.Add(black_ballista);
-                if (team == Team.BLACK_TEAM)
-                    Cell.cells[to_i(cell.Number)][to_j(cell.Number) + 1].Occupied = true;
-                else
-                    Cell.cells[to_i(cell.Number)][to_j(cell.Number) - 1].Occupied = true;
-            }
-
-            create_ballista(Team.BLACK_TEAM, Cell.cells[5][0]);
-        }
-
+       
         void unhighlight_cells()
         {
             foreach (int num in cell_nums)
             {
-                Cell.cells[to_i(num)][to_j(num)].Rec.Fill = new SolidColorBrush(Color.FromArgb(0, 0, 0, 0));
+                Cell.cells[Cell.to_i(num)][Cell.to_j(num)].Rec.Fill = new SolidColorBrush(Color.FromArgb(0, 0, 0, 0));
             }
             foreach (int num in cell_nums_attack)
             {
-                Cell.cells[to_i(num)][to_j(num)].Rec.Fill = new SolidColorBrush(Color.FromArgb(0, 0, 0, 0));
+                Cell.cells[Cell.to_i(num)][Cell.to_j(num)].Rec.Fill = new SolidColorBrush(Color.FromArgb(0, 0, 0, 0));
             }
             cell_nums.Clear();
             cell_nums_attack.Clear();
@@ -162,13 +70,14 @@ namespace DanceOfDragons
             blackImage.ImageSource = new BitmapImage(new Uri(images_path + "teams/theblacks.png"));
             greenImage.ImageSource = new BitmapImage(new Uri(images_path + "teams/thegreens.png"));
 
-            CreateCells();
-            CreateCreatures();
+            Cell.CreateCells();
+            Creature.images_path = images_path;
+            Creator.CreateCreatures();
 
             // Рисование ячеек
-            for (int i = 0; i < n_ver; i++)
+            for (int i = 0; i < Cell.n_ver; i++)
             {
-                for (int j = 0; j < n_hor; j++)
+                for (int j = 0; j < Cell.n_hor; j++)
                 {
                     MyCanvas.Children.Add(Cell.cells[i][j].Rec);
                 }
@@ -200,6 +109,16 @@ namespace DanceOfDragons
 
         private void gameLoop(object sender, EventArgs e)
         {
+            if (Creature.greens_num <= 0)
+            {
+                MessageBox.Show(@"Победила партия ""Черные"" Рейниры Таргариен", "Конец игры");
+                Application.Current.Shutdown();
+            }
+            else if (Creature.blacks_num <= 0)
+            {
+                MessageBox.Show(@"Победила партия ""Зеленые"" Эйгона II Таргариена", "Конец игры");
+                Application.Current.Shutdown();
+            }
             Turn_bg.Fill = (current_turn == Team.BLACK_TEAM) ? blackImage : greenImage;
 
             // Удаление
@@ -249,11 +168,17 @@ namespace DanceOfDragons
             if (e.OriginalSource is Rectangle)
             {
                 Rectangle rect = (Rectangle)e.OriginalSource;
-                Tag2 tag2 = (Tag2)rect.Tag;
+                Tag2 tag2;
+                try { tag2 = (Tag2)rect.Tag;}
+                catch (System.NullReferenceException) {
+                    string fraction = (current_turn == Team.BLACK_TEAM) ? "черных" : "зеленых";
+                    MessageBox.Show($"Сейчас ход: {fraction}", "Герб");
+                    return;
+                }
                 if (tag2.IsCell)
                 {
-                    int i = to_i(tag2.index);
-                    int j = to_j(tag2.index);
+                    int i = Cell.to_i(tag2.index);
+                    int j = Cell.to_j(tag2.index);
                     Cell.cells[i][j].ShowInfo();
                 }
                 else
@@ -263,23 +188,6 @@ namespace DanceOfDragons
             }
         }
 
-        void DetermineAvailableWays(int i, int j, int range, bool origin)
-        {
-            if (range >= 0 && i < n_ver && i >= 0
-                && j < n_hor && j >= 0 && (origin || !Cell.cells[i][j].Occupied))
-            {
-                int cell_num = to_cell_num(i, j);
-                cell_nums.Add(cell_num);
-                DetermineAvailableWays(i + 1, j, range - 1, false);
-                DetermineAvailableWays(i - 1, j, range - 1, false);
-                DetermineAvailableWays(i, j + 1, range - 1, false);
-                DetermineAvailableWays(i, j - 1, range - 1, false);
-                DetermineAvailableWays(i + 1, j - 1, range - 1, false);
-                DetermineAvailableWays(i + 1, j + 1, range - 1, false);
-                DetermineAvailableWays(i - 1, j - 1, range - 1, false);
-                DetermineAvailableWays(i - 1, j + 1, range - 1, false);
-            }
-        }
 
         private void LeftClickOnCanvas(object sender, MouseButtonEventArgs e)
         {
@@ -295,7 +203,7 @@ namespace DanceOfDragons
                         if (cell_nums.Contains(tag2.index))
                         {
                             Creature.creatures[current_creature_index].Move(
-                                Cell.cells[to_i(tag2.index)][to_j(tag2.index)]);
+                                Cell.cells[Cell.to_i(tag2.index)][Cell.to_j(tag2.index)]);
                             unhighlight_cells();
                             is_creature_selected = false;
                         }
@@ -304,7 +212,7 @@ namespace DanceOfDragons
                 else if (tag2.IsCell && is_attack && cell_nums_attack.Contains(tag2.index) && is_creature_selected)
                 {
                     Creature.creatures[current_creature_index].Move(
-                                Cell.cells[to_i(tag2.index)][to_j(tag2.index)]);
+                                Cell.cells[Cell.to_i(tag2.index)][Cell.to_j(tag2.index)]);
                     Creature.creatures[current_creature_index].Attack(Creature.creatures[current_creature_to_attack_index]);
                     unhighlight_cells();
                     is_creature_selected = false;
@@ -322,10 +230,18 @@ namespace DanceOfDragons
                         unhighlight_cells();
                         int cell_num = Creature.creatures[tag2.index].cell.Number;
                         int range = Creature.creatures[tag2.index].Range;
-                        DetermineAvailableWays(to_i(cell_num), to_j(cell_num), range, true);
+                        Creature.creatures[tag2.index].DetermineAvailableWays(Cell.to_i(cell_num), Cell.to_j(cell_num), range, true, cell_nums);
+                        if (Creature.creatures[tag2.index].Large)
+                        {
+                            int i = Cell.to_i(cell_num);
+                            int j = Cell.to_j(cell_num);
+                            if (j + 3 < Cell.n_hor && !Cell.cells[i][j + 2].Occupied)
+                                cell_nums.Add(Cell.cells[i][j + 1].Number);
+
+                        }
                         foreach (int num in cell_nums)
                         {
-                            Cell.cells[to_i(num)][to_j(num)].Rec.Fill = new SolidColorBrush(Color.FromArgb(125, 0, 0, 0));
+                            Cell.cells[Cell.to_i(num)][Cell.to_j(num)].Rec.Fill = new SolidColorBrush(Color.FromArgb(125, 0, 0, 0));
                         }
                     }
                     // Клик на вражеское существо
@@ -341,8 +257,8 @@ namespace DanceOfDragons
                             return;
                         }
                         current_creature_to_attack_index = tag2.index;
-                        int i = to_i(Creature.creatures[tag2.index].cell.Number);
-                        int j = to_j(Creature.creatures[tag2.index].cell.Number);
+                        int i = Cell.to_i(Creature.creatures[tag2.index].cell.Number);
+                        int j = Cell.to_j(Creature.creatures[tag2.index].cell.Number);
                         foreach (int cell_num in cell_nums)
                         {
                             for (int ik = -1; ik < 2; ik++)
@@ -352,12 +268,21 @@ namespace DanceOfDragons
                                         if (Cell.cells[i + ik][j + jk].Number == cell_num) {
                                             cell_nums_attack.Add(cell_num);
                                         }
+                                        if (Creature.creatures[current_creature_index].Large)
+                                        {
+                                            if (
+                                                Cell.cells[i + ik][j + jk - 1].Number == cell_num &&
+                                                !Cell.cells[i + ik][j + jk].Occupied)
+                                            {
+                                                cell_nums_attack.Add(cell_num);
+                                            }
+                                        }
                                     }
-                                    catch { continue; }
+                                    catch (IndexOutOfRangeException) { continue; }
                         }
                         foreach (int cell_num_attack in cell_nums_attack)
                         {
-                            Cell.cells[to_i(cell_num_attack)][to_j(cell_num_attack)].Rec.Fill = new SolidColorBrush(Color.FromArgb(125, 255, 0, 0));
+                            Cell.cells[Cell.to_i(cell_num_attack)][Cell.to_j(cell_num_attack)].Rec.Fill = new SolidColorBrush(Color.FromArgb(125, 255, 0, 0));
                         }
                         if (cell_nums_attack.Count != 0)
                             is_attack = true;

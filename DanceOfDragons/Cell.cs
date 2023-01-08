@@ -24,15 +24,15 @@ namespace DanceOfDragons
     class Cell
     {
         // Высота и ширина всех ячеек
-        static int height = 64;
-        static int width = 102;
-        static public int Height { get => height; }
-        static public int Width { get => width; }
+        static double height = 64;
+        static double width = 102;
+        static public double Height { get => height; }
+        static public double Width { get => width; }
         // Список всех ячеек
         static public Cell[][] cells;
         // Координаты ячейки
-        public int PosX { get; }
-        public int PosY { get; }
+        public double PosX { get; }
+        public double PosY { get; }
         // Номер ячейки
         public int Number { get; }
         // Может ли перейти эту ячейку нелетающее существо
@@ -41,7 +41,43 @@ namespace DanceOfDragons
         public bool Occupied { get; set; }
         public Rectangle Rec { get; set; }
 
-        public Cell(int posX, int posY, int number, bool obstacle)
+        public const double beg_left = 0; // Откуда по оси X начинается рисование ячеек
+        public const double beg_top = 152; // Откуда по оси Y начинается рисование ячеек
+
+        // Количество ячеек по вертикали
+        public const int n_ver = 11;
+        // Количество ячеек по горизонтали
+        public const int n_hor = 15;
+        public static int to_i(int cell_num)
+        {
+            return (cell_num - 1) / n_hor;
+        }
+        public static int to_j(int cell_num)
+        {
+            return (cell_num - 1) % n_hor;
+        }
+        public static int to_cell_num(int i, int j)
+        {
+            return j + i * n_hor + 1;
+        }
+
+        // Создание ячеек
+        static public void CreateCells()
+        {
+            cells = new Cell[n_ver][];
+            // Заполнение массива ячеек
+            for (int i = 0; i < n_ver; i++)
+            {
+                cells[i] = new Cell[n_hor];
+                for (int j = 0; j < n_hor; j++)
+                {
+                   cells[i][j] = new Cell(beg_left + j * Width, beg_top + i * Height,
+                        to_cell_num(i, j), false);
+                }
+            }
+        }
+
+        public Cell(double posX, double posY, int number, bool obstacle)
         {
             PosX = posX;
             PosY = posY;

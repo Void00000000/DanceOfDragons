@@ -64,6 +64,7 @@
       <SubType>Code</SubType>
     </Compile>
     <Compile Include="Cell.cs" />
+    <Compile Include="Creator.cs" />
     <Compile Include="Creatures.cs" />
     <Compile Include="MainWindow.xaml.cs">
       <DependentUpon>MainWindow.xaml</DependentUpon>
@@ -124,10 +125,22 @@
     <Resource Include="images\warriors\halberdier\halberdier_g0.png" />
   </ItemGroup>
   <ItemGroup>
-    <Resource Include="images\ranged_warriors\marksman\Marksman.png" />
+    <Resource Include="images\ranged_warriors\marksman\marksman_b0.png" />
   </ItemGroup>
   <ItemGroup>
     <Resource Include="images\ranged_warriors\ballista\ballista_b0.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <Resource Include="images\ranged_warriors\marksman\marksman_g0.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <Resource Include="images\ranged_warriors\ballista\ballista_g0.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <Resource Include="images\dragons\vhagar\vhagar_g0.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <Resource Include="images\dragons\vermithor\vermithor_b0.png" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
 </Project>
