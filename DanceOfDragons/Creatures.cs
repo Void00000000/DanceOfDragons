@@ -68,35 +68,35 @@ namespace DanceOfDragons
         }
 
         // Отражает изображение по оси x
-        protected void FlipLeft(bool shift)
+        protected void FlipLeft()
         {
             var newScaleTransform = new ScaleTransform();
             if (team == Team.BLACK_TEAM)
             {
                 newScaleTransform.ScaleX = -1;
-                if (shift) Offset_x -= Rec.Width;
+                Offset_x -= Rec.Width;
             }
             else
             {
                 newScaleTransform.ScaleX = 1;
-                if (shift) Offset_x += Rec.Width;
+                Offset_x += Rec.Width;
             }
             Rec.RenderTransform = newScaleTransform;
             
             dir_left = true;
         }
-        protected void FlipRight(bool shift)
+        protected void FlipRight()
         {
             var newScaleTransform = new ScaleTransform();
             if (team == Team.BLACK_TEAM)
             {
                 newScaleTransform.ScaleX = 1;
-                if (shift) Offset_x += Rec.Width;
+                Offset_x += Rec.Width;
             }
             else
             {
                 newScaleTransform.ScaleX = -1;
-                if (shift) Offset_x -= Rec.Width;
+                Offset_x -= Rec.Width;
             }
             Rec.RenderTransform = newScaleTransform;
             dir_left = false;
@@ -105,9 +105,9 @@ namespace DanceOfDragons
         public bool Move(Cell to_cell)
         {
             if (!dir_left && Cell.to_j(to_cell.Number) - Cell.to_j(cell.Number) < 0)
-                FlipLeft(true);
+                FlipLeft();
             if (dir_left && Cell.to_j(to_cell.Number) - Cell.to_j(cell.Number) > 0)
-                FlipRight(true);
+                FlipRight();
             cell.Occupied = false;
             if (Large) Cell.cells[Cell.to_i(cell.Number)][Cell.to_j(cell.Number) + 1].Occupied = false;
             to_cell.Occupied = true;
@@ -118,23 +118,29 @@ namespace DanceOfDragons
             Is_used = true;
             return true;
         }
-        virtual public void DetermineAvailableWays(int i, int j, int range, bool origin, List<int> cell_nums)
+        virtual public void DetermineAvailableWays(int i, int j, int range, bool origin, HashSet<int> cell_nums, 
+            HashSet<HashValue> cache)
         {
+            // HashSet нужен для мемоизации
+            int cell_num = Cell.to_cell_num(i, j);
+            HashValue hashValue = new HashValue(cell_num, range);
+            if (cache.Contains(hashValue))
+                return;
             if (range >= 0 && i < Cell.n_ver && i >= 0
                 && j < Cell.n_hor && j >= 0 && (origin || !Cell.cells[i][j].Occupied))
             {
                 if ( !Large || j + 1 < Cell.n_hor && (origin || !Cell.cells[i][j+1].Occupied))
                 {
-                    int cell_num = Cell.to_cell_num(i, j);
                     cell_nums.Add(cell_num);
-                    DetermineAvailableWays(i + 1, j, range - 1, false, cell_nums);
-                    DetermineAvailableWays(i - 1, j, range - 1, false, cell_nums);
-                    DetermineAvailableWays(i, j + 1, range - 1, false, cell_nums);
-                    DetermineAvailableWays(i, j - 1, range - 1, false, cell_nums);
-                    DetermineAvailableWays(i + 1, j - 1, range - 1, false, cell_nums);
-                    DetermineAvailableWays(i + 1, j + 1, range - 1, false, cell_nums);
-                    DetermineAvailableWays(i - 1, j - 1, range - 1, false, cell_nums);
-                    DetermineAvailableWays(i - 1, j + 1, range - 1, false, cell_nums);
+                    cache.Add(hashValue);
+                    DetermineAvailableWays(i + 1, j, range - 1, false, cell_nums, cache);
+                    DetermineAvailableWays(i - 1, j, range - 1, false, cell_nums, cache);
+                    DetermineAvailableWays(i, j + 1, range - 1, false, cell_nums, cache);
+                    DetermineAvailableWays(i, j - 1, range - 1, false, cell_nums, cache);
+                    DetermineAvailableWays(i + 1, j - 1, range - 1, false, cell_nums, cache);
+                    DetermineAvailableWays(i + 1, j + 1, range - 1, false, cell_nums, cache);
+                    DetermineAvailableWays(i - 1, j - 1, range - 1, false, cell_nums, cache);
+                    DetermineAvailableWays(i - 1, j + 1, range - 1, false, cell_nums, cache);
                 }
             }
         }
@@ -163,6 +169,18 @@ namespace DanceOfDragons
 
         public override void Attack(Creature creature)
         {
+            if (!dir_left && Cell.to_j(creature.cell.Number) - Cell.to_j(cell.Number) < 0)
+            {
+                FlipLeft();
+                Canvas.SetLeft(Rec, cell.PosX - Offset_x);
+                Canvas.SetTop(Rec, cell.PosY - Offset_y);
+            }
+            if (dir_left && Cell.to_j(creature.cell.Number) - Cell.to_j(cell.Number) > 0)
+            {
+                FlipRight();
+                Canvas.SetLeft(Rec, cell.PosX - Offset_x);
+                Canvas.SetTop(Rec, cell.PosY - Offset_y);
+            }
             MessageBox.Show(Name + " нанёс урон " + creature.Name + " в размере " + Dmg + " ед.", "Информация об атаке");
             creature.Hp -= Dmg;
             if (creature.Hp <= 0)
@@ -200,10 +218,18 @@ namespace DanceOfDragons
 
         public override void Attack(Creature creature)
         {
-            //if (!dir_left && Cell.to_j(creature.cell.Number) - Cell.to_j(cell.Number) < 0)
-            //    FlipLeft(true);
-            //if (dir_left && Cell.to_j(creature.cell.Number) - Cell.to_j(cell.Number) > 0)
-            //    FlipRight(true);
+            if (!dir_left && Cell.to_j(creature.cell.Number) - Cell.to_j(cell.Number) < 0)
+            {
+                FlipLeft();
+                Canvas.SetLeft(Rec, cell.PosX - Offset_x);
+                Canvas.SetTop(Rec, cell.PosY - Offset_y);
+            }
+            if (dir_left && Cell.to_j(creature.cell.Number) - Cell.to_j(cell.Number) > 0)
+            {
+                FlipRight();
+                Canvas.SetLeft(Rec, cell.PosX - Offset_x);
+                Canvas.SetTop(Rec, cell.PosY - Offset_y);
+            }
             MessageBox.Show(Name + " нанёс урон " + creature.Name + " в размере " + Dmg + " ед.", "Информация об атаке");
             creature.Hp -= Dmg;
             if (creature.Hp <= 0)
@@ -228,6 +254,18 @@ namespace DanceOfDragons
 
         public override void Attack(Creature creature)
         {
+            if (!dir_left && Cell.to_j(creature.cell.Number) - Cell.to_j(cell.Number) < 0)
+            {
+                FlipLeft();
+                Canvas.SetLeft(Rec, cell.PosX - Offset_x);
+                Canvas.SetTop(Rec, cell.PosY - Offset_y);
+            }
+            if (dir_left && Cell.to_j(creature.cell.Number) - Cell.to_j(cell.Number) > 0)
+            {
+                FlipRight();
+                Canvas.SetLeft(Rec, cell.PosX - Offset_x);
+                Canvas.SetTop(Rec, cell.PosY - Offset_y);
+            }
             MessageBox.Show(Name + " нанёс урон " + creature.Name + " в размере " + Dmg + " ед.", "Информация об атаке");
             creature.Hp -= Dmg;
             // Существо за противником тоже получает урон
@@ -289,22 +327,27 @@ namespace DanceOfDragons
 
         }
 
-        public override void DetermineAvailableWays(int i, int j, int range, bool origin, List<int> cell_nums)
+        public override void DetermineAvailableWays(int i, int j, int range, bool origin, HashSet<int> cell_nums, 
+            HashSet<HashValue> cache)
         {
-            if (range >= 0 && i < Cell.n_ver && i >= 0 && j < Cell.n_hor
-            && j >= 0)
+            // HashSet нужен для мемоизации
+            int cell_num = Cell.to_cell_num(i, j);
+            HashValue hashValue = new HashValue(cell_num, range);
+            if (cache.Contains(hashValue))
+                return;
+            if (range >= 0 && i < Cell.n_ver && i >= 0 && j < Cell.n_hor && j >= 0)
             {
-                int cell_num = Cell.to_cell_num(i, j);
+                cache.Add(hashValue);
                 if (j + 1 < Cell.n_hor && !Cell.cells[i][j].Occupied && !Cell.cells[i][j + 1].Occupied)
                     cell_nums.Add(cell_num);
-                DetermineAvailableWays(i + 1, j, range - 1, false, cell_nums);
-                DetermineAvailableWays(i - 1, j, range - 1, false, cell_nums);
-                DetermineAvailableWays(i, j + 1, range - 1, false, cell_nums);
-                DetermineAvailableWays(i, j - 1, range - 1, false, cell_nums);
-                DetermineAvailableWays(i + 1, j - 1, range - 1, false, cell_nums);
-                DetermineAvailableWays(i + 1, j + 1, range - 1, false, cell_nums);
-                DetermineAvailableWays(i - 1, j - 1, range - 1, false, cell_nums);
-                DetermineAvailableWays(i - 1, j + 1, range - 1, false, cell_nums);
+                DetermineAvailableWays(i + 1, j, range - 1, false, cell_nums, cache);
+                DetermineAvailableWays(i - 1, j, range - 1, false, cell_nums, cache);
+                DetermineAvailableWays(i, j + 1, range - 1, false, cell_nums, cache);
+                DetermineAvailableWays(i, j - 1, range - 1, false, cell_nums, cache);
+                DetermineAvailableWays(i + 1, j - 1, range - 1, false, cell_nums, cache);
+                DetermineAvailableWays(i + 1, j + 1, range - 1, false, cell_nums, cache);
+                DetermineAvailableWays(i - 1, j - 1, range - 1, false, cell_nums, cache);
+                DetermineAvailableWays(i - 1, j + 1, range - 1, false, cell_nums, cache);
             }
         }
     }

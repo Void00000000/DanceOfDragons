@@ -16,7 +16,6 @@ using System.Windows.Threading;
 
 
 // Сейчас
-// TODO: Мемоизация
 // TODO: Стартово окно
 // TODO: Выбор карт
 // TODO: Обработка препятствий
@@ -26,13 +25,26 @@ namespace DanceOfDragons
     /// <summary>
     /// Interaction logic for MainWindow.xaml
     /// </summary>
+
+    // Для мемоизации
+    struct HashValue {
+        public int cell_num;
+        public int range;
+
+        public HashValue(int cell_num, int range)
+        {
+            this.cell_num = cell_num;
+            this.range = range;
+        }
+    }
+
     public partial class MainWindow : Window
     {
         DispatcherTimer gameTimer = new DispatcherTimer();
         Team current_turn = Team.BLACK_TEAM; // Чей сейчас ход(черных или зеленых)
         bool is_creature_selected = false; // Выбрано ли существо
         bool is_attack = false; // Атакует ли сейчас существо
-        List<int> cell_nums = new List<int>(); // Ячейки, на которые выбранное существо может перейти
+        HashSet<int> cell_nums = new HashSet<int>(); // Ячейки, на которые выбранное существо может перейти
         List<int> cell_nums_attack = new List<int>(); // Ячейки, на которые выбранное существо может перейти и атаковать из них
         int current_creature_index;
         int current_creature_to_attack_index;
@@ -195,7 +207,8 @@ namespace DanceOfDragons
             if (e.OriginalSource is Rectangle)
             {
                 Rectangle rect = (Rectangle)e.OriginalSource;
-                Tag2 tag2 = (Tag2)rect.Tag;
+                Tag2 tag2;
+                try { tag2 = (Tag2)rect.Tag; } catch (System.NullReferenceException){return;}
                 if (tag2.IsCell && !is_attack)
                 {
                     if (is_creature_selected)
@@ -230,7 +243,8 @@ namespace DanceOfDragons
                         unhighlight_cells();
                         int cell_num = Creature.creatures[tag2.index].cell.Number;
                         int range = Creature.creatures[tag2.index].Range;
-                        Creature.creatures[tag2.index].DetermineAvailableWays(Cell.to_i(cell_num), Cell.to_j(cell_num), range, true, cell_nums);
+                        HashSet<HashValue> cache = new HashSet<HashValue>(); // Для мемоизации
+                        Creature.creatures[tag2.index].DetermineAvailableWays(Cell.to_i(cell_num), Cell.to_j(cell_num), range, true, cell_nums, cache);
                         if (Creature.creatures[tag2.index].Large)
                         {
                             int i = Cell.to_i(cell_num);
