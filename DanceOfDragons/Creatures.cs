@@ -27,7 +27,7 @@ namespace DanceOfDragons
         public bool Large { get; protected set; } // Является ли существо большим (большие существа занимают две клетки) 
         public int Num { get; protected set; } // Номер существа
         public bool Is_used { get; set; } // Сходило ли существо
-        protected bool dir_left; // Куда смотрит изображение (влево или вправо)
+        public bool dir_left; // Куда смотрит изображение (влево или вправо)
         public Rectangle Rec { get; set; }
         public double Offset_x = 0;
         public double Offset_y = 1.5 * Cell.Width;
@@ -68,7 +68,7 @@ namespace DanceOfDragons
         }
 
         // Отражает изображение по оси x
-        protected void FlipLeft()
+        public void FlipLeft()
         {
             var newScaleTransform = new ScaleTransform();
             if (team == Team.BLACK_TEAM)
@@ -85,7 +85,7 @@ namespace DanceOfDragons
             
             dir_left = true;
         }
-        protected void FlipRight()
+        public void FlipRight()
         {
             var newScaleTransform = new ScaleTransform();
             if (team == Team.BLACK_TEAM)
@@ -194,6 +194,12 @@ namespace DanceOfDragons
             // Ответная атака от противника
             else
             {
+                if (dir_left && creature.dir_left)
+                    creature.FlipRight();
+                else if (!dir_left && !creature.dir_left)
+                    creature.FlipLeft();
+                Canvas.SetLeft(creature.Rec, creature.cell.PosX - creature.Offset_x);
+                Canvas.SetTop(creature.Rec, creature.cell.PosY - creature.Offset_y);
                 MessageBox.Show(creature.Name + " нанёс урон " + Name + " в размере " + creature.Dmg + " ед.", "Информация об атаке");
                 Hp -= creature.Dmg;
                 if (Hp <= 0)
@@ -313,6 +319,12 @@ namespace DanceOfDragons
             // Ответная атака от противника
             else
             {
+                if (dir_left && creature.dir_left)
+                    creature.FlipRight();
+                else if (!dir_left && !creature.dir_left)
+                    creature.FlipLeft();
+                Canvas.SetLeft(creature.Rec, creature.cell.PosX - creature.Offset_x);
+                Canvas.SetTop(creature.Rec, creature.cell.PosY - creature.Offset_y);
                 MessageBox.Show(creature.Name + " нанёс урон " + Name + " в размере " + creature.Dmg + " ед.", "Информация об атаке");
                 Hp -= creature.Dmg;
                 if (Hp <= 0)

@@ -50,7 +50,8 @@ namespace DanceOfDragons
         int current_creature_to_attack_index;
         string images_path = "pack://application:,,,/images/";
         public static List<Rectangle> removeRects = new List<Rectangle>(); // Уничтоженные существа
-
+        List<Rectangle> recs_hp = new List<Rectangle>();
+        List<Label> txts_hp = new List<Label>();
         ImageBrush blackImage = new ImageBrush();
         ImageBrush greenImage = new ImageBrush();
 
@@ -139,12 +140,49 @@ namespace DanceOfDragons
                 if (creature != null)
                     MyCanvas.Children.Remove(creature.Rec);
             }
+            // Удаление прямоугольников с информацией о численности
+            foreach (Rectangle rec_hp in recs_hp)
+            {
+                MyCanvas.Children.Remove(rec_hp);
+            }
+            foreach (Label txt_hp in txts_hp)
+            {
+                MyCanvas.Children.Remove(txt_hp);
+            }
+            recs_hp.Clear();
+            txts_hp.Clear();
 
             // Рисование
             foreach (Creature creature in Creature.creatures)
             {
                 if (creature != null)
                     MyCanvas.Children.Add(creature.Rec);
+            }
+            // Рисование информации о численности
+            foreach (Creature creature in Creature.creatures)
+            {
+                if (creature != null)
+                {
+                    Rectangle rec_hp = new Rectangle();
+                    rec_hp.Width = 0.5 * Cell.Width;
+                    rec_hp.Height = 0.25 * Cell.Height;
+                    rec_hp.Fill = Brushes.Purple;
+                    rec_hp.Stroke = Brushes.White;
+                    //rec_hp.StrokeThickness = 1;
+                    Canvas.SetLeft(rec_hp, Canvas.GetLeft(creature.cell.Rec));
+                    Canvas.SetTop(rec_hp, Canvas.GetTop(creature.cell.Rec) + 0.75 * Cell.Height);
+
+                    Label txt_hp = new Label();
+                    txt_hp.Content = creature.Hp;
+                    txt_hp.Foreground = Brushes.White;
+                    Canvas.SetLeft(txt_hp, Canvas.GetLeft(rec_hp) + 0.2 * rec_hp.Width);
+                    Canvas.SetTop(txt_hp, Canvas.GetTop(rec_hp) - 0.3 * rec_hp.Height);
+                    MyCanvas.Children.Add(rec_hp);
+                    MyCanvas.Children.Add(txt_hp);
+
+                    recs_hp.Add(rec_hp);
+                    txts_hp.Add(txt_hp);
+                }
             }
         }
 
@@ -285,8 +323,13 @@ namespace DanceOfDragons
                                         if (Creature.creatures[current_creature_index].Large)
                                         {
                                             if (
-                                                Cell.cells[i + ik][j + jk - 1].Number == cell_num &&
-                                                !Cell.cells[i + ik][j + jk].Occupied)
+                                                (Cell.cells[i + ik][j + jk - 1].Number == cell_num
+                                                // && !Cell.cells[i + ik][j + jk].Occupied)
+                                                )||
+                                                (Cell.cells[i + ik][j + jk + 1].Number == cell_num
+                                                //&& !Cell.cells[i + ik][j + jk].Occupied)
+                                                )
+                                               )
                                             {
                                                 cell_nums_attack.Add(cell_num);
                                             }

@@ -86,65 +86,65 @@ namespace DanceOfDragons
         }
 
         //Создание существ
-        //public static void CreateCreatures()
-        //{
-        //    Создание существ партии "Чёрные"
-        //    for (int i = 0; i < Cell.n_ver; i += 1)
-        //        CreateWarrior_1(Team.BLACK_TEAM, i, 4);
-        //    for (int i = 0; i < Cell.n_ver; i += 2)
-        //        CreateWarrior_1(Team.BLACK_TEAM, i, 3);
-        //    for (int i = 2; i < 8; i += 1)
-        //        CreateRangedWarrior_1(Team.BLACK_TEAM, i, 2);
-
-        //    CreateRangedWarrior_2(Team.BLACK_TEAM, 0, 0);
-        //    CreateRangedWarrior_2(Team.BLACK_TEAM, Cell.n_ver - 1, 0);
-        //    CreateWarrior_2(Team.BLACK_TEAM, 1, 0);
-        //    CreateWarrior_2(Team.BLACK_TEAM, 1, 1);
-        //    CreateWarrior_2(Team.BLACK_TEAM, 0, 2);
-        //    CreateWarrior_2(Team.BLACK_TEAM, 1, 2);
-
-        //    CreateWarrior_2(Team.BLACK_TEAM, Cell.n_ver - 2, 0);
-        //    CreateWarrior_2(Team.BLACK_TEAM, Cell.n_ver - 2, 1);
-        //    CreateWarrior_2(Team.BLACK_TEAM, Cell.n_ver - 2, 2);
-        //    CreateWarrior_2(Team.BLACK_TEAM, Cell.n_ver - 1, 2);
-
-        //    CreateDragon(DragonNames.Vermithor, 4, 0);
-
-        //    Создание существ партии "Зелёные"
-        //    for (int i = 0; i < Cell.n_ver; i += 1)
-        //        CreateWarrior_1(Team.GREEN_TEAM, i, Cell.n_hor - 1 - 4);
-        //    for (int i = 0; i < Cell.n_ver; i += 2)
-        //        CreateWarrior_1(Team.GREEN_TEAM, i, Cell.n_hor - 1 - 3);
-        //    for (int i = 2; i < 8; i += 1)
-        //        CreateRangedWarrior_1(Team.GREEN_TEAM, i, Cell.n_hor - 1 - 2);
-
-        //    CreateRangedWarrior_2(Team.GREEN_TEAM, 0, Cell.n_hor - 1 - 1 - 0);
-        //    CreateRangedWarrior_2(Team.GREEN_TEAM, Cell.n_ver - 1, Cell.n_hor - 1 - 1 - 0);
-        //    CreateWarrior_2(Team.GREEN_TEAM, 1, Cell.n_hor - 1 - 0);
-        //    CreateWarrior_2(Team.GREEN_TEAM, 1, Cell.n_hor - 1 - 1);
-        //    CreateWarrior_2(Team.GREEN_TEAM, 0, Cell.n_hor - 1 - 2);
-        //    CreateWarrior_2(Team.GREEN_TEAM, 1, Cell.n_hor - 1 - 2);
-
-        //    CreateWarrior_2(Team.GREEN_TEAM, Cell.n_ver - 2, Cell.n_hor - 1 - 0);
-        //    CreateWarrior_2(Team.GREEN_TEAM, Cell.n_ver - 2, Cell.n_hor - 1 - 1);
-        //    CreateWarrior_2(Team.GREEN_TEAM, Cell.n_ver - 2, Cell.n_hor - 1 - 2);
-        //    CreateWarrior_2(Team.GREEN_TEAM, Cell.n_ver - 1, Cell.n_hor - 1 - 2);
-
-        //    CreateDragon(DragonNames.Vhagar, 4, Cell.n_hor - 2);
-        //}
         public static void CreateCreatures()
         {
-            CreateRangedWarrior_1(Team.BLACK_TEAM, 0, 5);
-            CreateRangedWarrior_2(Team.BLACK_TEAM, 1, 5);
-            CreateWarrior_1(Team.BLACK_TEAM, 2, 5);
-            CreateWarrior_2(Team.BLACK_TEAM, 3, 5);
-            CreateDragon(DragonNames.Vermithor, 4, 5);
+            //Создание существ партии "Чёрные"
+            for (int i = 0; i < Cell.n_ver; i += 2)
+                CreateWarrior_1(Team.BLACK_TEAM, i, 4);
+            //for (int i = 0; i < Cell.n_ver; i += 2)
+            //    CreateWarrior_1(Team.BLACK_TEAM, i, 3);
+            for (int i = 2; i < 8; i += 2)
+                CreateRangedWarrior_1(Team.BLACK_TEAM, i, 2);
 
-            CreateRangedWarrior_1(Team.GREEN_TEAM, 0, Cell.n_hor - 1 - 5);
-            CreateRangedWarrior_2(Team.GREEN_TEAM, 1, Cell.n_hor - 2 - 5);
-            CreateWarrior_1(Team.GREEN_TEAM, 2, Cell.n_hor - 1 - 5);
-            CreateWarrior_2(Team.GREEN_TEAM, 3, Cell.n_hor - 1 - 5);
-            CreateDragon(DragonNames.Vhagar, 4, Cell.n_hor - 2 - 5);
+            CreateRangedWarrior_2(Team.BLACK_TEAM, 0, 0);
+            CreateRangedWarrior_2(Team.BLACK_TEAM, Cell.n_ver - 1, 0);
+            CreateWarrior_2(Team.BLACK_TEAM, 1, 0);
+            //CreateWarrior_2(Team.BLACK_TEAM, 1, 1);
+            CreateWarrior_2(Team.BLACK_TEAM, 0, 2);
+            //CreateWarrior_2(Team.BLACK_TEAM, 1, 2);
+
+            CreateWarrior_2(Team.BLACK_TEAM, Cell.n_ver - 2, 0);
+            //CreateWarrior_2(Team.BLACK_TEAM, Cell.n_ver - 2, 1);
+            CreateWarrior_2(Team.BLACK_TEAM, Cell.n_ver - 2, 2);
+            //CreateWarrior_2(Team.BLACK_TEAM, Cell.n_ver - 1, 2);
+
+            CreateDragon(DragonNames.Vermithor, 4, 0);
+
+            //Создание существ партии "Зелёные"
+            for (int i = 0; i < Cell.n_ver; i += 2)
+                CreateWarrior_1(Team.GREEN_TEAM, i, Cell.n_hor - 1 - 4);
+            //for (int i = 0; i < Cell.n_ver; i += 2)
+            //    CreateWarrior_1(Team.GREEN_TEAM, i, Cell.n_hor - 1 - 3);
+            for (int i = 2; i < 8; i += 2)
+                CreateRangedWarrior_1(Team.GREEN_TEAM, i, Cell.n_hor - 1 - 2);
+
+            CreateRangedWarrior_2(Team.GREEN_TEAM, 0, Cell.n_hor - 1 - 1 - 0);
+            CreateRangedWarrior_2(Team.GREEN_TEAM, Cell.n_ver - 1, Cell.n_hor - 1 - 1 - 0);
+            CreateWarrior_2(Team.GREEN_TEAM, 1, Cell.n_hor - 1 - 0);
+            //CreateWarrior_2(Team.GREEN_TEAM, 1, Cell.n_hor - 1 - 1);
+            CreateWarrior_2(Team.GREEN_TEAM, 0, Cell.n_hor - 1 - 2);
+            //CreateWarrior_2(Team.GREEN_TEAM, 1, Cell.n_hor - 1 - 2);
+
+            CreateWarrior_2(Team.GREEN_TEAM, Cell.n_ver - 2, Cell.n_hor - 1 - 0);
+            //CreateWarrior_2(Team.GREEN_TEAM, Cell.n_ver - 2, Cell.n_hor - 1 - 1);
+            CreateWarrior_2(Team.GREEN_TEAM, Cell.n_ver - 2, Cell.n_hor - 1 - 2);
+            //CreateWarrior_2(Team.GREEN_TEAM, Cell.n_ver - 1, Cell.n_hor - 1 - 2);
+
+            CreateDragon(DragonNames.Vhagar, 4, Cell.n_hor - 2);
         }
+        //public static void CreateCreatures()
+        //{
+        //    CreateRangedWarrior_1(Team.BLACK_TEAM, 0, 5);
+        //    CreateRangedWarrior_2(Team.BLACK_TEAM, 1, 5);
+        //    CreateWarrior_1(Team.BLACK_TEAM, 2, 5);
+        //    CreateWarrior_2(Team.BLACK_TEAM, 3, 5);
+        //    CreateDragon(DragonNames.Vermithor, 4, 5);
+
+        //    CreateRangedWarrior_1(Team.GREEN_TEAM, 0, Cell.n_hor - 1 - 5);
+        //    CreateRangedWarrior_2(Team.GREEN_TEAM, 1, Cell.n_hor - 2 - 5);
+        //    CreateWarrior_1(Team.GREEN_TEAM, 2, Cell.n_hor - 1 - 5);
+        //    CreateWarrior_2(Team.GREEN_TEAM, 3, Cell.n_hor - 1 - 5);
+        //    CreateDragon(DragonNames.Vhagar, 4, Cell.n_hor - 2 - 5);
+        //}
     }
 }
