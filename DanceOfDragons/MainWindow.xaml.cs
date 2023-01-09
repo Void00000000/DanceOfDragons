@@ -103,6 +103,7 @@ namespace DanceOfDragons
                     MyCanvas.Children.Add(creature.Rec);
             }
 
+
             gameTimer.Interval = TimeSpan.FromMilliseconds(20);
             gameTimer.Tick += gameLoop;
             gameTimer.Start();
@@ -166,22 +167,27 @@ namespace DanceOfDragons
                     Rectangle rec_hp = new Rectangle();
                     rec_hp.Width = 0.5 * Cell.Width;
                     rec_hp.Height = 0.25 * Cell.Height;
-                    rec_hp.Fill = Brushes.Purple;
+                    if (!creature.Is_used)
+                        rec_hp.Fill = Brushes.Purple;
+                    else
+                        rec_hp.Fill = Brushes.Gray;
                     rec_hp.Stroke = Brushes.White;
-                    //rec_hp.StrokeThickness = 1;
+                    Tag2 tag2 = new Tag2(false, creature.Num);
+                    rec_hp.Tag = tag2;
                     Canvas.SetLeft(rec_hp, Canvas.GetLeft(creature.cell.Rec));
                     Canvas.SetTop(rec_hp, Canvas.GetTop(creature.cell.Rec) + 0.75 * Cell.Height);
 
                     Label txt_hp = new Label();
                     txt_hp.Content = creature.Hp;
                     txt_hp.Foreground = Brushes.White;
+                    txt_hp.Tag = tag2;
                     Canvas.SetLeft(txt_hp, Canvas.GetLeft(rec_hp) + 0.2 * rec_hp.Width);
                     Canvas.SetTop(txt_hp, Canvas.GetTop(rec_hp) - 0.3 * rec_hp.Height);
-                    MyCanvas.Children.Add(rec_hp);
-                    MyCanvas.Children.Add(txt_hp);
 
                     recs_hp.Add(rec_hp);
                     txts_hp.Add(txt_hp);
+                    MyCanvas.Children.Add(rec_hp);
+                    MyCanvas.Children.Add(txt_hp);
                 }
             }
         }
@@ -203,6 +209,8 @@ namespace DanceOfDragons
                     if (creature != null)
                         creature.Is_used = false;
                 }
+                is_creature_selected = false;
+                is_attack = false;
             }
             // Отменить выбор существа
             if (e.Key == Key.Q)
@@ -241,12 +249,11 @@ namespace DanceOfDragons
 
         private void LeftClickOnCanvas(object sender, MouseButtonEventArgs e)
         {
-            
             if (e.OriginalSource is Rectangle)
             {
                 Rectangle rect = (Rectangle)e.OriginalSource;
                 Tag2 tag2;
-                try { tag2 = (Tag2)rect.Tag; } catch (System.NullReferenceException){return;}
+                try { tag2 = (Tag2)rect.Tag; } catch (System.NullReferenceException) { return; }
                 if (tag2.IsCell && !is_attack)
                 {
                     if (is_creature_selected)
@@ -317,7 +324,8 @@ namespace DanceOfDragons
                                 for (int jk = -1; jk < 2; jk++)
                                     try
                                     {
-                                        if (Cell.cells[i + ik][j + jk].Number == cell_num) {
+                                        if (Cell.cells[i + ik][j + jk].Number == cell_num)
+                                        {
                                             cell_nums_attack.Add(cell_num);
                                         }
                                         if (Creature.creatures[current_creature_index].Large)
@@ -325,7 +333,7 @@ namespace DanceOfDragons
                                             if (
                                                 (Cell.cells[i + ik][j + jk - 1].Number == cell_num
                                                 // && !Cell.cells[i + ik][j + jk].Occupied)
-                                                )||
+                                                ) ||
                                                 (Cell.cells[i + ik][j + jk + 1].Number == cell_num
                                                 //&& !Cell.cells[i + ik][j + jk].Occupied)
                                                 )
